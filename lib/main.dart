@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_app/Pages/Orderbook.dart';
 import 'package:flutter_app/Pages/signup_scene.dart';
  // Assurez-vous que ce chemin correspond à l'emplacement de votre fichier login.dart
 
@@ -16,10 +17,8 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.green,
       ),
       home: Scaffold(
-        appBar: AppBar(
-          title: Text('Login Screen'), // Titre de l'écran
-        ),
-        body: SignUp(), // Définir le Login comme écran principal
+
+        body: OrderBook(), // Définir le Login comme écran principal
       ),
     );
   }
