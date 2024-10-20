@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:login/login_scene.dart';
+import 'package:flutter_app/Pages/login_scene.dart';
 
 class ForgetPassword extends StatelessWidget {
   @override

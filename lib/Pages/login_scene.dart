@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:login/forgetpass.dart';
-import 'package:login/signup_scene.dart';
+import 'package:flutter_app/Pages/forgetpass.dart';
+import 'package:flutter_app/Pages/signup_scene.dart';
+
 
 class Login extends StatelessWidget {
   @override
