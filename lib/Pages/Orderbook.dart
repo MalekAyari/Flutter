@@ -60,7 +60,6 @@ class OrderBook extends StatelessWidget {
     2: 'ETH',
     3: 'LTC',
   };
-
   final Map<int, IconData> currencyIcons = {
     1: Icons.monetization_on, // Placeholder icon for BTC
     2: Icons.attach_money,    // Placeholder icon for ETH

@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_app/Pages/CurrencyMarket.dart';
+import 'package:flutter_app/Pages/CurrencyTracker.dart';
 import 'package:flutter_app/Pages/Orderbook.dart';
 import 'package:flutter_app/Pages/signup_scene.dart';
  // Assurez-vous que ce chemin correspond à l'emplacement de votre fichier login.dart
@@ -18,7 +20,7 @@ class MyApp extends StatelessWidget {
       ),
       home: Scaffold(
 
-        body: OrderBook(), // Définir le Login comme écran principal
+        body: CurrencyMarket(), // Définir le Login comme écran principal
       ),
     );
   }
