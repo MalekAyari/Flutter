@@ -71,10 +71,12 @@ class OrderBook extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
         backgroundColor: const Color(0xFF212936),
-
+        appBar: AppBar(
+          title: Text("Order Book"),
+        ),
         body: Column(
           children: [
-            SizedBox(height: 100),
+            SizedBox(height: 60),
             Container(
               height: 650,
               child: Row(

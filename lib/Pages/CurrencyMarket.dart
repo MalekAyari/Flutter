@@ -25,7 +25,9 @@ class _CurrencyMarketState extends State<CurrencyMarket>{
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFF212936),
-
+      appBar: AppBar(
+        title: const Text("Currency Market"),
+      ),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
         child: ListView.builder(
