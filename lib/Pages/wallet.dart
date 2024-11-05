@@ -3,7 +3,6 @@ import 'package:flutter_app/Entities/wallet.dart';
 import 'package:flutter_app/Pages/CurrencyMarket.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-
 import 'package:flutter_app/Pages/Orderbook.dart';
 
 class MyWalletPage extends StatefulWidget {
@@ -12,15 +11,14 @@ class MyWalletPage extends StatefulWidget {
 }
 
 class _MyWalletPageState extends State<MyWalletPage> {
-  // Constants
-  final String userId = '671e91ef7b7e347c73472bef'; // Replace with dynamic userId if needed
-
-  // Wallet data variables
+  final String userId = '672a503e47820b5b13d91e6b'; // Replace with dynamic userId if needed
+  String id = '';
   String owner = 'Awaiting Data';
   double balance = 0.0;
+  double eth = 0.0;
+  double btc = 0.0;
+  double ltc = 0.0;
   String currency = 'N/A';
-
-  // Flag to check if data is loading
   bool isLoading = true;
   bool isFound = false;
 
@@ -30,52 +28,50 @@ class _MyWalletPageState extends State<MyWalletPage> {
     fetchWalletData();
   }
 
-  void fetchUserData() async{
-    final String url = 'http://10.0.2.2:3000/api/wallet/$userId';
-  }
-
-  // Fetch wallet data
   void fetchWalletData() async {
     final String url = 'http://10.0.2.2:3000/api/wallet/$userId';
     try {
       final response = await http.get(Uri.parse(url));
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
-
-        // Convert balance to double safely
-
         setState(() {
+          id = data['_id'];
           owner = data['userId'].substring(0, 10);
           balance = (data['balance'] as num).toDouble();
+          ltc = (data['ltc'] as num).toDouble();
+          btc = (data['btc'] as num).toDouble();
+          eth = (data['eth'] as num).toDouble();
           currency = data['currency'];
           isFound = true;
-          isLoading = false; // Update isLoading here
+          isLoading = false;
         });
       } else {
         print("Failed to load wallet data. Status code: ${response.statusCode}");
-        if (response.statusCode == 404){
+        if (response.statusCode == 404) {
           owner = "Not Found";
-          isLoading = false; // Update isLoading here
+          isLoading = false;
         }
         setState(() {
-          isLoading = false; // Update isLoading here even if the request fails
+          isLoading = false;
         });
       }
     } catch (e) {
       print("Error fetching wallet data: $e");
       setState(() {
-        isLoading = false; // Update isLoading here in case of an error
+        isLoading = false;
       });
     }
   }
+
   void createWallet() async {
     final String url = 'http://10.0.2.2:3000/api/wallet/create';
-
-    // Example data for creating a new wallet
     final Map<String, dynamic> walletData = {
       'userId': userId,
-      'balance': 0.0,
-      'currency': 'USD', // Replace with the desired default currency
+      'balance': 100.0,
+      'ETH': 0.0,
+      'BTC': 0.0,
+      'LTC': 0.0,
+      'currency': 'USD',
     };
 
     try {
@@ -90,6 +86,9 @@ class _MyWalletPageState extends State<MyWalletPage> {
         setState(() {
           owner = data['userId'].substring(0, 10);
           balance = (data['balance'] as num).toDouble();
+          ltc = (data['ltc'] as num).toDouble();
+          btc = (data['btc'] as num).toDouble();
+          eth = (data['eth'] as num).toDouble();
           currency = data['currency'];
           isFound = true;
           isLoading = false;
@@ -109,8 +108,6 @@ class _MyWalletPageState extends State<MyWalletPage> {
     }
   }
 
-
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -120,76 +117,55 @@ class _MyWalletPageState extends State<MyWalletPage> {
       ),
       body: isLoading
           ? const Center(child: CircularProgressIndicator())
-          : isFound ?
-            Padding(
-            padding: const EdgeInsets.all(50),
-            child: Center(
-              child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Text(
-                    "Owner:",
-                    style: TextStyle(
-                        fontSize: 24,
-                        color: Color(0xFFB1E457),
-                        fontWeight: FontWeight.bold),
-                  ),
-                  const SizedBox(width: 108),
-                  Text(
-                    owner,
-                    style: const TextStyle(
-                        fontSize: 24, color: Colors.white),
-                  ),
-                ],
+          : isFound
+          ? Padding(
+        padding: const EdgeInsets.all(50),
+        child: Center(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              buildInfoRow("Owner:", owner),
+              const SizedBox(height: 20),
+              buildInfoRow("Balance:", "$balance $currency"),
+              const SizedBox(height: 20),
+              Container(
+                margin: const EdgeInsets.all(5),
+                padding: const EdgeInsets.all(5),
+                decoration: BoxDecoration(
+                  color: Colors.grey[900]
+                ),
+                child: Column(
+                  children: [
+                    Container(
+                      decoration: BoxDecoration(
+                        color: Colors.grey[700], // Set grey background color here
+                        borderRadius: BorderRadius.circular(15), // Set rounded corners here
+                      ),
+                      height: 5,
+                    ),
+                    buildInfoRow("Bitcoins:", "$btc"),
+                    const SizedBox(height: 20),
+                    buildInfoRow("Ethereum:", "$eth"),
+                    const SizedBox(height: 20),
+                    buildInfoRow("Litecoin:", "$ltc"),
+                    Container(
+                      decoration: BoxDecoration(
+                        color: Colors.grey[700], // Set grey background color here
+                        borderRadius: BorderRadius.circular(60), // Set rounded corners here
+                      ),
+                      height: 5,
+                    ),
+                  ],
+                ),
               ),
               const SizedBox(height: 20),
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Text(
-                    "Balance:",
-                    style: TextStyle(
-                        fontSize: 24,
-                        color: Color(0xFFB1E457),
-                        fontWeight: FontWeight.bold),
-                  ),
-                  const SizedBox(width: 115),
-                  Text(
-                    "$balance $currency",
-                    style: const TextStyle(
-                        fontSize: 24, color: Colors.white),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 20),
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Text(
-                    "Currency:",
-                    style: TextStyle(
-                        fontSize: 24,
-                        color: Color(0xFFB1E457),
-                        fontWeight: FontWeight.bold),
-                  ),
-                  const SizedBox(width: 170),
-                  Text(
-                    currency,
-                    style: const TextStyle(
-                        fontSize: 24, color: Colors.white),
-                  ),
-                ],
-              ),
+              buildInfoRow("Currency:", currency),
               const SizedBox(height: 50),
               Center(
                 child: Column(
                   children: [
                     ElevatedButton(
                       onPressed: () {
-                        // Navigate to the OrderBook page
                         Navigator.push(
                           context,
                           MaterialPageRoute(
@@ -202,16 +178,19 @@ class _MyWalletPageState extends State<MyWalletPage> {
                           borderRadius: BorderRadius.circular(22),
                         ),
                       ),
-                      child: const Text('See Currency Market', style: TextStyle(fontSize: 18, color: Colors.black),
+                      child: const Text(
+                        'See Currency Market',
+                        style: TextStyle(
+                            fontSize: 18, color: Colors.black),
                       ),
                     ),
+                    const SizedBox(height: 10),
                     ElevatedButton(
                       onPressed: () {
-                        // Navigate to the OrderBook page
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => OrderBook()),
+                              builder: (context) => OrderBook(userId: userId, walletId: id)),
                         );
                       },
                       style: ElevatedButton.styleFrom(
@@ -220,44 +199,82 @@ class _MyWalletPageState extends State<MyWalletPage> {
                           borderRadius: BorderRadius.circular(22),
                         ),
                       ),
-                      child: const Text('See Order Book', style: TextStyle(fontSize: 18, color: Colors.black),
+                      child: const Text(
+                        'See Order Book',
+                        style: TextStyle(
+                            fontSize: 18, color: Colors.black),
                       ),
                     ),
                   ],
-                )
+                ),
               ),
             ],
           ),
         ),
-      ) :
-            Padding(
-              padding: const EdgeInsets.all(50),
-              child: Center(
-                child: Column(
-                  children: [
-                    Text("User: $userId" , textAlign: TextAlign.center, style: TextStyle(fontSize: 18, color: Colors.white)),
-                    SizedBox(height: 20),
-                    Text("No wallet found for this user, would you like to create one?", style: TextStyle(fontSize: 18, color: Colors.white),  textAlign: TextAlign.center),
-                    SizedBox(height: 20),
-                    ElevatedButton(
-                      onPressed: () {
-                        // Navigate to the OrderBook page
-                        createWallet();
-                      },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(0xFFB1E457),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(22),
-                        ),
-                      ),
-                      child: const Text('New Wallet...', style: TextStyle(fontSize: 18, color: Colors.black),
-                      ),
-                    ),
-
-                  ],
+      )
+          : Padding(
+        padding: const EdgeInsets.all(50),
+        child: Center(
+          child: Column(
+            children: [
+              Text(
+                "User: $userId",
+                textAlign: TextAlign.center,
+                style: const TextStyle(
+                    fontSize: 18, color: Colors.white),
+              ),
+              const SizedBox(height: 20),
+              const Text(
+                "No wallet found for this user, would you like to create one?",
+                style:
+                TextStyle(fontSize: 18, color: Colors.white),
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: 20),
+              ElevatedButton(
+                onPressed: createWallet,
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color(0xFFB1E457),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(22),
+                  ),
+                ),
+                child: const Text(
+                  'New Wallet...',
+                  style: TextStyle(fontSize: 18, color: Colors.black),
                 ),
               ),
-            )
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget buildInfoRow(String label, String data) {
+    return Row(
+      children: [
+        Expanded(
+          child: Text(
+            label,
+            style: const TextStyle(
+              fontSize: 24,
+              color: Color(0xFFB1E457),
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ),
+        Expanded(
+          child: Text(
+            data,
+            textAlign: TextAlign.right,
+            style: const TextStyle(
+              fontSize: 24,
+              color: Colors.white,
+            ),
+          ),
+        ),
+      ],
     );
   }
 }
