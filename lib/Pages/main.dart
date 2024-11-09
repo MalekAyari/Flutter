@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_app/Pages/login_scene.dart';
-import 'package:flutter_app/Pages/signup_scene.dart';
- // Assurez-vous que ce chemin correspond à l'emplacement de votre fichier login.dart
+import 'login_scene.dart'; // Assurez-vous que ce chemin correspond à l'emplacement de votre fichier login.dart
 
 void main() {
   runApp(MyApp());

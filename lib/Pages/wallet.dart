@@ -6,6 +6,10 @@ import 'dart:convert';
 import 'package:flutter_app/Pages/Orderbook.dart';
 
 class MyWalletPage extends StatefulWidget {
+  final String userId; // Declare userId in the OrderBook class
+
+  const MyWalletPage({Key? key, required this.userId}) : super(key: key);
+
   @override
   _MyWalletPageState createState() => _MyWalletPageState();
 }
@@ -25,11 +29,12 @@ class _MyWalletPageState extends State<MyWalletPage> {
   @override
   void initState() {
     super.initState();
-    fetchWalletData();
+
+    fetchWalletData(widget.userId);
   }
 
-  void fetchWalletData() async {
-    final String url = 'http://10.0.2.2:3000/api/wallet/$userId';
+  void fetchWalletData(String identifier) async {
+    final String url = 'http://10.0.2.2:3000/api/wallet/$identifier';
     try {
       final response = await http.get(Uri.parse(url));
       if (response.statusCode == 200) {
@@ -66,8 +71,8 @@ class _MyWalletPageState extends State<MyWalletPage> {
   void createWallet() async {
     final String url = 'http://10.0.2.2:3000/api/wallet/create';
     final Map<String, dynamic> walletData = {
-      'userId': userId,
-      'balance': 100.0,
+      'userId': widget.userId,
+      'balance': 300.0,
       'ETH': 0.0,
       'BTC': 0.0,
       'LTC': 0.0,
@@ -190,7 +195,7 @@ class _MyWalletPageState extends State<MyWalletPage> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => OrderBook(userId: userId, walletId: id)),
+                              builder: (context) => OrderBook(userId: widget.userId, walletId: id)),
                         );
                       },
                       style: ElevatedButton.styleFrom(
@@ -218,7 +223,7 @@ class _MyWalletPageState extends State<MyWalletPage> {
           child: Column(
             children: [
               Text(
-                "User: $userId",
+                "User: ${widget.userId}",
                 textAlign: TextAlign.center,
                 style: const TextStyle(
                     fontSize: 18, color: Colors.white),

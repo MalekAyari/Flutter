@@ -328,6 +328,10 @@ class _OrderBookState extends State<OrderBook> {
                   // Submit button
                   ElevatedButton(
                     onPressed: () {
+                      if (widget.walletId.isEmpty || widget.walletId.length != 24) {
+                        print("Invalid walletId format: ${widget.walletId}");
+                        return;
+                      }
                       // Gather order details from input fields
                       String orderType = selectedOrderType;
                       String asset = currencyMap[selectedCurrencyId]!; // Assuming asset is currency name
